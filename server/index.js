@@ -1,53 +1,78 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const mongodb = require('mongodb');
-const mongoose = require("mongoose");
-const eventObject  = require("./models/events.js");
+const express 		= require('express');
+const bodyParser 	= require('body-parser');
+const cors 			= require('cors');
+const mongodb 		= require('mongodb');
+const mongoose 		= require("mongoose");
+const session 		= require('express-session');
+const passport 		= require('passport');
+const LocalStrategy = require('passport-local');
+const User 			= require('./models/user');
+const app 			= express();
 
-const app = express();
+// Requiring Routes here
+let aboutMeRoutes  = require("./routes/aboutMe");
+let albumsRoutes   = require("./routes/albums");
+let	indexRoutes    = require("./routes/index");
+let	faqRoutes  	   = require("./routes/faq");
+let	photoRoutes    = require("./routes/photo");
+let	videosRoutes   = require("./routes/videos");
 
-// Middleware
+require('dotenv').config()
+
 app.use(bodyParser.json());
-app.use(cors());
 
-// const posts = require('./routes/api/posts');
+var corsOptions = {
+	credentials: true,
+	origin: ['http://localhost:5000', 'http://localhost:8080', 'http://localhost:8081']
+}
 
-// app.use('/api/posts', posts);
+// use cors options
+app.use(cors(corsOptions));
 
-// Handle production
-// if (process.env.NODE_ENV === 'production') {
-  // Static folder
-//   app.use(express.static(__dirname + '/public/'));
+// === SESSION CONFIG ===== //
+app.use(session({
+	secret: 'process.env.PASSPORT_secret',
+	resave: false,
+	saveUninitialized: false,
+	cookie: {
+		httpOnly: true,
+		expires: Date.now + 1000 * 60 * 60 * 24 * 7,
+		maxAge: 1000 * 60 * 60 * 24 * 7
+	}
+}));
 
-  // Handle SPA
-//   app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
-// }
+// === PASSPORT CONFIG ===== //
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-// INDEX ROUTE
-app.get("/",function(req,res){
-	eventObject.find({event: true}, function(err, allEvents){
-		if(err){
-			// req.flash("err", err.message);
-			res.send("not working:", err);
-		}else{
-			res.send({events: allEvents});
-		}
-	});
+// CLOUDINARY
+var cloudinary = require("cloudinary").v2;
+cloudinary.config({ 
+  cloud_name: 'isaqshoots', 
+  api_key: '574768211339436', 
+  api_secret: '7Sv4s9lXu422nkQ6jhYSeXS542k'
 });
 
-// app.get("/", (req, res) => {
-//   res.send("hello");
-// });
-
 var url ='mongodb+srv://isaqshoots:Loganwayne17@cluster0.u0ebe.mongodb.net/isaqshoots?retryWrites=true&w=majority'
+var URL_local = "mongodb://localhost:27017/isaqshoots";
 try {
-    var db = mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
-    console.log('success connection at :'+ url);
+    var db = mongoose.connect(URL_local, {useNewUrlParser: true, useUnifiedTopology: true});
+    console.log('success connection at :'+ URL_local);
 }
 catch (error) {
     console.log('Error connection: ' + error);
 }
+
+// using routes
+app.use('^/api',aboutMeRoutes);
+app.use('^/api',albumsRoutes);
+app.use('^/api',indexRoutes);
+app.use('^/api',faqRoutes);
+app.use('^/api',photoRoutes);
+app.use('^/api',videosRoutes);
 
 const port = process.env.PORT || 5000;
 
