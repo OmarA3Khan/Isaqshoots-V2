@@ -59,7 +59,7 @@ cloudinary.config({
 var url ='mongodb+srv://isaqshoots:Loganwayne17@cluster0.u0ebe.mongodb.net/isaqshoots?retryWrites=true&w=majority'
 var URL_local = "mongodb://localhost:27017/isaqshoots";
 try {
-    var db = mongoose.connect(URL_local, {useNewUrlParser: true, useUnifiedTopology: true});
+    var db = mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
     console.log('success connection at :'+ URL_local);
 }
 catch (error) {
@@ -74,6 +74,8 @@ app.use('^/api',faqRoutes);
 app.use('^/api',photoRoutes);
 app.use('^/api',videosRoutes);
 
+process.env.NODE_ENV = 'production'
+
 // Handle production
 if (process.env.NODE_ENV === 'production') {
 	// Static folder
@@ -85,4 +87,4 @@ if (process.env.NODE_ENV === 'production') {
 
 const port = process.env.PORT || 5000;
 
-app.listen(port, () => console.log(`Server started on port ${port}`));
+app.listen(port, () => console.log(`Server started on port ${port} NODE_ENV= ${process.env.NODE_ENV} `));
