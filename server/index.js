@@ -74,7 +74,7 @@ app.use('^/api',faqRoutes);
 app.use('^/api',photoRoutes);
 app.use('^/api',videosRoutes);
 
-process.env.NODE_ENV = 'production'
+// process.env.NODE_ENV = 'production'
 
 // Handle production
 if (process.env.NODE_ENV === 'production') {
