@@ -31,7 +31,7 @@ app.use(cors(corsOptions));
 
 // === SESSION CONFIG ===== //
 app.use(session({
-	secret: 'process.env.PASSPORT_secret',
+	secret: process.env.PASSPORT_secret,
 	resave: false,
 	saveUninitialized: false,
 	cookie: {
@@ -48,19 +48,21 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+
 // CLOUDINARY
 var cloudinary = require("cloudinary").v2;
 cloudinary.config({ 
   cloud_name: 'isaqshoots', 
-  api_key: '574768211339436', 
-  api_secret: '7Sv4s9lXu422nkQ6jhYSeXS542k'
+  api_key: process.env.CLOUDINARY_api_key, 
+  api_secret: process.env.CLOUDINARY_api_secret
 });
 
-var url ='mongodb+srv://isaqshoots:Loganwayne17@cluster0.u0ebe.mongodb.net/isaqshoots?retryWrites=true&w=majority'
+// var url ='mongodb+srv://isaqshoots:Loganwayne17@cluster0.u0ebe.mongodb.net/isaqshoots?retryWrites=true&w=majority'
+var url = process.env.DATABASEURL;
 var URL_local = "mongodb://localhost:27017/isaqshoots";
 try {
     var db = mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
-    console.log('success connection at :'+ URL_local);
+    console.log('success connection at :'+ process.env.DATABASEURL);
 }
 catch (error) {
     console.log('Error connection: ' + error);
