@@ -57,7 +57,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_api_secret
 });
 
-// var url ='mongodb+srv://isaqshoots:Loganwayne17@cluster0.u0ebe.mongodb.net/isaqshoots?retryWrites=true&w=majority'
 var url = process.env.DATABASEURL;
 var URL_local = "mongodb://localhost:27017/isaqshoots";
 try {
@@ -76,7 +75,7 @@ app.use('^/api',faqRoutes);
 app.use('^/api',photoRoutes);
 app.use('^/api',videosRoutes);
 
-// process.env.NODE_ENV = 'production'
+process.env.NODE_ENV = 'production'
 
 // Handle production
 if (process.env.NODE_ENV === 'production') {
