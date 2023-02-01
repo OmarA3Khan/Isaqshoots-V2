@@ -18,12 +18,11 @@ Admin can
 * create, edit, and remove FAQs
 * edit the About section
 * structure the media files and display them together as an album or can display them as individual photos.
+* Users can view the media and book a private session through a form.
 
 Here's a screenshot of the Admin Page
 
 <img width="1469" alt="Screenshot at Feb 01 15-01-10" src="https://user-images.githubusercontent.com/80813676/216026826-002c68f1-c8b5-4823-986e-a25a73ff91e3.png">
-
-* Users can view the media and book a private session through a form.
 
 ## Run it locally
 Install mongodb
